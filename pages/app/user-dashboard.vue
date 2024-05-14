@@ -1,9 +1,13 @@
 <script setup>
 import axios from 'axios';
 
-const paginate = (page) => {
+const paginateAdmin = (page) => {
     vm.page = page;
     GetUsers();
+};
+const paginatePemilih = (page) => {
+    userPemilih.page = page;
+    GetUsersByRole();
 };
 
 const vm = reactive({
@@ -35,27 +39,28 @@ const GetUsers = async () => {
         .then((result) => {
             // resolve(result.data ?? result);
             vm.listUser = result.data.data;
-            vm.totalItems = result.data.countPages;
-            vm.totalPages = result.data.totalPages;
+            vm.totalItems = result.data.countROLE;
+            vm.totalPages = result.data.totalPagesROLE;
             vm.currentPage = result.data.currentPage;
-            console.log(result.data);
             vm.loading = false;
         }).catch((err) => {
             console.log(err);
             // (err.response.data) ? reject(err.response.data) : reject(err)
-        });
+        })
     // })
 };
 
 const GetUsersByRole = async () => {
-    axios.get(`${import.meta.env.VITE_APP_ENV}/users/?page=${vm.page}&limit=${vm.limit}&sortByCreated=${vm.sortByDate}&role=PEMILIH`)
+    userPemilih.loading = true;
+    axios.get(`${import.meta.env.VITE_APP_ENV}/users/?page=${userPemilih.page}&limit=${userPemilih.limit}&sortByCreated=${userPemilih.sortByDate}&role=PEMILIH`)
         .then((result) => {
             userPemilih.listUser = result.data.data;
-            userPemilih.totalItems = result.data.countPages;
-            userPemilih.totalPages = result.data.totalPages;
+            userPemilih.totalItems = result.data.countROLE;
+            userPemilih.totalPages = result.data.totalPagesROLE;
             userPemilih.currentPage = result.data.currentPage;
+            userPemilih.loading = false;
         }).catch((err) => {
-
+            console.log(err);
         });
 }
 
@@ -115,13 +120,20 @@ onMounted(() => {
                                 </td>
                             </tr>
                         </tbody>
+                        <tbody v-else>
+                            <tr>
+                                <td colspan="4" class="p-5 text-center text-[20px] font-semibold">
+                                    loading
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
 
             <div class="flex justify-center mt-5" v-if="vm.listUser.length">
-                <vue-awesome-paginate :totalItems="vm.countPages" v-model="vm.currentPage" @click="paginate"
-                    :items-per-page="vm.totalPages" :max-pages-shown="3" paginate-buttons-class="btn"
+                <vue-awesome-paginate :totalItems="vm.totalItems" v-model="vm.currentPage" @click="paginateAdmin"
+                    :items-per-page="vm.limit" :max-pages-shown="3" paginate-buttons-class="btn"
                     active-page-class="btn-active" back-button-class="back-btn" next-button-class="next-btn">
                     <template #prev-button>
                         <span class="flex items-center justify-center">
@@ -154,9 +166,9 @@ onMounted(() => {
                                 <th class="p-2 whitespace-nowrap">
                                     <div class="font-semibold text-left">Nama</div>
                                 </th>
-                                <th class="p-2 whitespace-nowrap">
+                                <!-- <th class="p-2 whitespace-nowrap">
                                     <div class="font-semibold text-left">Username</div>
-                                </th>
+                                </th> -->
                                 <th class="p-2 whitespace-nowrap">
                                     <div class="font-semibold text-left">Detil</div>
                                 </th>
@@ -165,21 +177,16 @@ onMounted(() => {
                                 </th>
                             </tr>
                         </thead>
-                        <tbody v-if="!vm.loading" class="text-[16px] divide-y divide-gray-100">
+                        <tbody v-if="!userPemilih.loading" class="text-[16px] divide-y divide-gray-100">
                             <tr v-for="(item, i) in userPemilih.listUser" :key="`${i}`">
                                 <td class="p-2 whitespace-nowrap">
                                     <div class="flex items-center text-center">
-                                        <!-- <div class="flex-shrink-0 w-10 h-10 mr-2 sm:mr-3">
-                                        <img class="rounded-full"
-                                            src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-05.jpg"
-                                            width="40" height="40" alt="Alex Shatov">
-                                    </div> -->
                                         <div class="font-medium text-gray-800">{{ item.fullName }}</div>
                                     </div>
                                 </td>
-                                <td class="p-2 whitespace-nowrap">
+                                <!-- <td class="p-2 whitespace-nowrap">
                                     <div class="text-left">{{ item.username }}</div>
-                                </td>
+                                </td> -->
                                 <td class="p-2 whitespace-nowrap">
                                     <div class="font-medium text-left text-green-500">Lihat</div>
                                 </td>
@@ -191,14 +198,22 @@ onMounted(() => {
                                 </td>
                             </tr>
                         </tbody>
+                        <tbody v-else>
+                            <tr>
+                                <td colspan="3" class="p-5 text-center text-[20px] font-semibold">
+                                    loading
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="flex justify-center mt-5" v-if="vm.listUser.length">
-                <vue-awesome-paginate :totalItems="vm.countPages" v-model="vm.currentPage" @click="paginate"
-                    :items-per-page="vm.totalPages" :max-pages-shown="3" paginate-buttons-class="btn"
-                    active-page-class="btn-active" back-button-class="back-btn" next-button-class="next-btn">
+            <div class="flex justify-center mt-5" v-if="userPemilih.listUser.length">
+                <vue-awesome-paginate :totalItems="userPemilih.totalItems" v-model="userPemilih.currentPage"
+                    @click="paginatePemilih" :items-per-page="userPemilih.limit" :max-pages-shown="3"
+                    paginate-buttons-class="btn" active-page-class="btn-active" back-button-class="back-btn"
+                    next-button-class="next-btn">
                     <template #prev-button>
                         <span class="flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="black" width="12" height="12"
