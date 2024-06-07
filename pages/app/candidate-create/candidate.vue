@@ -100,7 +100,6 @@ const postData = () => {
         .then((result) => {
             console.log(result);
             formData.loading = false
-            console.log(`success, ${result.data.data}`);
         }).catch((err) => {
             console.log(err.response.data);
             formData.loading = false
