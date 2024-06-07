@@ -165,6 +165,6 @@ const postData = () => {
 }
 
 .remove-arrow {
-    -moz-appearance: textfield;
+    -appearance: textfield;
 }
 </style>
