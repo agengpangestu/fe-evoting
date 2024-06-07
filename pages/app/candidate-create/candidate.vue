@@ -95,8 +95,6 @@ const postData = () => {
     axios.post(`${import.meta.env.VITE_APP_ENV}/candidates/post`, body
         , {
             headers: { "Content-Type": "multipart/form-data" }
-            // headers: { 'Content-Type': 'application/json' },
-
         }
     )
         .then((result) => {
