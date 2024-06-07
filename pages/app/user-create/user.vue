@@ -56,6 +56,9 @@ const postData = () => {
 <template>
     <div class="p-10">
         <div class="h-auto p-5 bg-white rounded-md shadow-md drop-shadow min-w-max">
+            <div class="px-5">
+                <h1 class="text-[22px]">User</h1>
+            </div>
             <form @submit.prevent="postData">
                 <div class="flex justify-center space-x-5">
                     <div class="space-y-4">
@@ -86,7 +89,7 @@ const postData = () => {
                                         {{ Role.selected?.name ?? "Pilih Role" }}
                                     </p>
                                     <mdicon name="chevron-down" :class="`transition-all delay-1 ${Role.menu ? 'rotate-180' : 'rotate-0'
-                                    }`" />
+                }`" />
                                 </div>
 
                                 <template v-slot:item>
@@ -143,8 +146,7 @@ const postData = () => {
 
                 </div>
                 <div class="flex justify-center pt-8">
-                    <button v-if="!formData.loading" type="submit"
-                        class="bg-blue-500 text-white px-3 py-1.5 rounded">
+                    <button v-if="!formData.loading" type="submit" class="bg-blue-500 text-white px-3 py-1.5 rounded">
                         <h4 class="font-medium">Submit</h4>
                     </button>
                     <button v-else type="submit" class="bg-blue-500 text-white px-3 py-1.5 rounded">
