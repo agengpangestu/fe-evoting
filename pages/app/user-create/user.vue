@@ -5,7 +5,6 @@ import axios from 'axios';
 
 const selectedRole = (role) => {
     Role.selected = role;
-    console.log(Role.selected);
 };
 
 const formData = reactive({
