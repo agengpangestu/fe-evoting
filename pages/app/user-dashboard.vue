@@ -10,6 +10,27 @@ const paginatePemilih = (page) => {
     GetUsersByRole();
 };
 
+const deleteUserAdmin = (id) => {
+    axios.delete(`${import.meta.env.VITE_APP_ENV}/users/${id}/user-delete`)
+        .then((result) => {
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        }).catch((err) => {
+
+        });
+};
+const deleteUser = (id) => {
+    axios.delete(`${import.meta.env.VITE_APP_ENV}/users/${id}/user-delete`)
+        .then((result) => {
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        }).catch((err) => {
+            console.log(err);
+        });
+}
+
 const vm = reactive({
     listUser: [],
     totalItems: null,
@@ -72,8 +93,14 @@ onMounted(() => {
 <template>
     <div class="space-y-4">
         <div class="max-w-full p-4 mx-auto bg-white border border-gray-200 rounded-[10px] shadow-lg">
-            <header class="px-5 py-4 border-b border-gray-100">
-                <h2 class="font-semibold text-gray-800">Daftar Admin</h2>
+            <header class="flex justify-between px-5 py-4 border-b border-gray-100">
+                <h2 class="font-semibold text-gray-800 text-[18px]">Daftar Admin</h2>
+                <h2 class="font-medium text-center text-[18px] text-white">
+                    <nuxt-link class="p-1 px-4 bg-green-500 rounded" to="/app/user-create/user">
+                        Buat User
+                    </nuxt-link>
+                </h2>
+
             </header>
             <div class="p-3">
                 <div class="overflow-x-auto">
@@ -113,9 +140,12 @@ onMounted(() => {
                                     <div class="font-medium text-left text-green-500">Lihat</div>
                                 </td>
                                 <td class="p-2 text-center whitespace-nowrap">
-                                    <div class="flex justify-center space-x-5 text-lg text-center">
-                                        <button>Edit</button>
-                                        <button>Hapus</button>
+                                    <div
+                                        class="flex justify-center space-x-5 text-lg font-medium text-center text-white">
+                                        <nuxt-link :to="`/app/user-create/edit-user-${item.id}`">
+                                            <button class="p-1 px-4 bg-blue-500 rounded">Edit</button>
+                                        </nuxt-link>
+                                        <button @click="deleteUserAdmin(item.id)" class="p-1 px-4 bg-red-500 rounded">Hapus</button>
                                     </div>
                                 </td>
                             </tr>
@@ -191,9 +221,11 @@ onMounted(() => {
                                     <div class="font-medium text-left text-green-500">Lihat</div>
                                 </td>
                                 <td class="p-2 text-center whitespace-nowrap">
-                                    <div class="flex justify-center space-x-5 text-lg text-center">
-                                        <button>Edit</button>
-                                        <button>Hapus</button>
+                                    <div
+                                        class="flex justify-center space-x-5 text-lg font-medium text-center text-white">
+                                        <button class="p-1 px-4 bg-blue-500 rounded">Edit</button>
+                                        <button @click="deleteUser(item.id)"
+                                            class="p-1 px-4 bg-red-500 rounded">Hapus</button>
                                     </div>
                                 </td>
                             </tr>
