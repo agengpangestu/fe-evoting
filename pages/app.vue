@@ -1,5 +1,11 @@
 <script setup>
 import SideBarComp from '@/components/SideBarComp.vue';
+
+definePageMeta({
+    middleware: ['authentication']
+});
+
+
 </script>
 <template>
     <div class="relative flex w-full h-max p-2.5">
