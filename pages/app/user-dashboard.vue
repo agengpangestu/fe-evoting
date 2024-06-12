@@ -17,7 +17,7 @@ const deleteUserAdmin = (id) => {
                 window.location.reload();
             }, 1000);
         }).catch((err) => {
-
+            console.log(err);
         });
 };
 const deleteUser = (id) => {
@@ -145,7 +145,8 @@ onMounted(() => {
                                         <nuxt-link :to="`/app/user-create/edit-user-${item.id}`">
                                             <button class="p-1 px-4 bg-blue-500 rounded">Edit</button>
                                         </nuxt-link>
-                                        <button @click="deleteUserAdmin(item.id)" class="p-1 px-4 bg-red-500 rounded">Hapus</button>
+                                        <button @click="deleteUserAdmin(item.id)"
+                                            class="p-1 px-4 bg-red-500 rounded">Hapus</button>
                                     </div>
                                 </td>
                             </tr>
