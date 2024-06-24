@@ -38,7 +38,7 @@ const logedIn = async () => {
             <form @submit.prevent="logedIn">
 
                 <div class="flex justify-center">
-                    <h1 class="text-[24px]">Log in Admin</h1>
+                    <h1 class="text-[24px]">Log in ke Dashboard E-Voting</h1>
                 </div>
                 <div class="flex flex-col items-center mt-5 space-y-5">
                     <div class="flex flex-col space-y-2 text-[18px]">
