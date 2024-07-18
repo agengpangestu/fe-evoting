@@ -114,7 +114,7 @@ const fetchCandidate = async () => {
             const electionID = data.data.data[0].electionID;
             vm.election = electionID;
 
-            const candidate = await axios.get(`${import.meta.env.VITE_APP_ENV}/candidates/group/?electionID=${electionID}`)
+            const candidate = await axios.get(`${import.meta.env.VITE_APP_ENV}/candidates/group/?electionID=${electionID}&role=asc`)
             vm.candidate = candidate.data.data;
             console.log(vm.candidate);
 
