@@ -24,7 +24,7 @@ const logedIn = async () => {
 
     formData.loading = true;
 
-    await $authentication.loggedIn(body);
+    await $authentication.loggedIn(body);   
     if ($authentication.isAuthenticate()) return navigateTo('/app');
 
     formData.loading = false;
