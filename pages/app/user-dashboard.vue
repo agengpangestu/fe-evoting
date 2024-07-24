@@ -1,6 +1,8 @@
 <script setup>
 import axios from 'axios';
 
+const { $day } = useNuxtApp();
+
 const paginateAdmin = (page) => {
     vm.page = page;
     GetUsers();
@@ -59,15 +61,17 @@ const GetUsers = async () => {
     axios.get(`${import.meta.env.VITE_APP_ENV}/users/?page=${vm.page}&limit=${vm.limit}&sortByCreated=${vm.sortByDate}&role=ADMIN`)
         .then((result) => {
             // resolve(result.data ?? result);
+            vm.loading = false;
             vm.listUser = result.data.data;
             vm.totalItems = result.data.countROLE;
             vm.totalPages = result.data.totalPagesROLE;
             vm.currentPage = result.data.currentPage;
-            vm.loading = false;
         }).catch((err) => {
             console.log(err);
+            vm.loading = false;
             // (err.response.data) ? reject(err.response.data) : reject(err)
         })
+    vm.loading = true;
     // })
 };
 
@@ -75,14 +79,16 @@ const GetUsersByRole = async () => {
     userPemilih.loading = true;
     axios.get(`${import.meta.env.VITE_APP_ENV}/users/?page=${userPemilih.page}&limit=${userPemilih.limit}&sortByCreated=${userPemilih.sortByDate}&role=PEMILIH`)
         .then((result) => {
+            userPemilih.loading = false;
             userPemilih.listUser = result.data.data;
             userPemilih.totalItems = result.data.countROLE;
             userPemilih.totalPages = result.data.totalPagesROLE;
             userPemilih.currentPage = result.data.currentPage;
-            userPemilih.loading = false;
         }).catch((err) => {
             console.log(err);
+            userPemilih.loading = false;
         });
+    userPemilih.loading = true;
 }
 
 onMounted(() => {
@@ -114,6 +120,9 @@ onMounted(() => {
                                     <div class="font-semibold text-left">Username</div>
                                 </th>
                                 <th class="p-2 whitespace-nowrap">
+                                    <div class="font-semibold text-left">Foto Identitas</div>
+                                </th>
+                                <th class="p-2 whitespace-nowrap">
                                     <div class="font-semibold text-left">Detil</div>
                                 </th>
                                 <th class="p-2 whitespace-nowrap">
@@ -135,6 +144,12 @@ onMounted(() => {
                                 </td>
                                 <td class="p-2 whitespace-nowrap">
                                     <div class="text-left">{{ item.username }}</div>
+                                </td>
+                                <td class="p-2 whitespace-nowrap">
+                                    <div class="font-medium text-left text-[14px]">
+                                        <img :src="item.identityPicture"
+                                            class="w-[100px] h-[100px]  object-center object-cover" alt="pict-user" />
+                                    </div>
                                 </td>
                                 <td class="p-2 whitespace-nowrap">
                                     <div class="font-medium text-left text-green-500">Lihat</div>
@@ -195,13 +210,19 @@ onMounted(() => {
                         <thead class="font-semibold text-gray-400 uppercase text-[16px] bg-gray-50">
                             <tr>
                                 <th class="p-2 whitespace-nowrap">
-                                    <div class="font-semibold text-left">Nama</div>
+                                    <div class="font-semibold text-left">Nomor Identitas</div>
                                 </th>
-                                <!-- <th class="p-2 whitespace-nowrap">
-                                    <div class="font-semibold text-left">Username</div>
-                                </th> -->
                                 <th class="p-2 whitespace-nowrap">
-                                    <div class="font-semibold text-left">Detil</div>
+                                    <div class="font-semibold text-left">Nama Pemilih</div>
+                                </th>
+                                <th class="p-2 whitespace-nowrap">
+                                    <div class="font-semibold text-left">Voted</div>
+                                </th>
+                                <th class="p-2 whitespace-nowrap">
+                                    <div class="font-semibold text-left">Terdaftar pada tanggal</div>
+                                </th>
+                                <th class="p-2 whitespace-nowrap">
+                                    <div class="font-semibold text-left">Foto Identitas</div>
                                 </th>
                                 <th class="p-2 whitespace-nowrap">
                                     <div class="font-semibold text-center">Aksi</div>
@@ -211,15 +232,27 @@ onMounted(() => {
                         <tbody v-if="!userPemilih.loading" class="text-[16px] divide-y divide-gray-100">
                             <tr v-for="(item, i) in userPemilih.listUser" :key="`${i}`">
                                 <td class="p-2 whitespace-nowrap">
+                                    <div class="text-left">{{ item.identityNumber }}</div>
+                                </td>
+                                <td class="p-2 whitespace-nowrap">
                                     <div class="flex items-center text-center">
                                         <div class="font-medium text-gray-800">{{ item.fullName }}</div>
                                     </div>
                                 </td>
-                                <!-- <td class="p-2 whitespace-nowrap">
-                                    <div class="text-left">{{ item.username }}</div>
-                                </td> -->
                                 <td class="p-2 whitespace-nowrap">
-                                    <div class="font-medium text-left text-green-500">Lihat</div>
+                                    <div class="font-medium text-left text-gray-800">{{ item.ifVoted ? 'Ya' : 'Tidak' }}
+                                    </div>
+                                </td>
+                                <td class="p-2 whitespace-nowrap">
+                                    <div class="font-medium text-left">
+                                        {{ $day(item.createdAt).locale('id').format('DD MMMM YYYY H:mm') }}
+                                    </div>
+                                </td>
+                                <td class="p-2 whitespace-nowrap">
+                                    <div class="font-medium text-left text-[14px]">
+                                        <img :src="item.identityPicture" class="w-[100px] h-[100px]"
+                                            alt="pict-pemilih" />
+                                    </div>
                                 </td>
                                 <td class="p-2 text-center whitespace-nowrap">
                                     <div
