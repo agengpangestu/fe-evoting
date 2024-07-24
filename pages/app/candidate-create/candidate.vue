@@ -1,7 +1,15 @@
 <script setup>
 import axios from 'axios';
+import Cookie from 'js-cookie';
 
 import SelectComp from '~/components/SelectComp.vue';
+
+const successNotif = (value) => {
+    useNuxtApp().$toast.info(value);
+};
+const errorNotif = (err) => {
+    useNuxtApp().$toast.warn(err);
+};
 
 const formData = reactive({
     candidateName: '',
@@ -9,6 +17,8 @@ const formData = reactive({
     candidateMisi: '',
     candidateAvatar: null,
     candidateRole: '',
+    ketua: null,
+    wakil_ketua: null,
     group: '',
     electionID: null,
     level: '',
@@ -17,19 +27,11 @@ const formData = reactive({
 });
 const RoleCandidate = reactive({
     list: [
-        { name: "KETUA", },
-        { name: "WAKIL_KETUA", },
-        { name: "NONE", },
-        { name: "PERORANGAN" }
+        { id: 1, name: "KETUA", },
+        { id: 2, name: "WAKIL_KETUA", },
     ],
     menu: false,
     load: false,
-    selected: null,
-});
-const author = reactive({
-    list: [],
-    load: false,
-    menu: false,
     selected: null,
 });
 const Level = reactive({
@@ -49,10 +51,6 @@ const Schedule = reactive({
 const selectRoleCandidate = (item) => {
     RoleCandidate.selected = item;
 };
-const selectAuthor = (item) => {
-    author.selected = item;
-    fetchAuthor(item);
-};
 const selectedLevel = (item) => {
     Level.selected = item;
 };
@@ -61,14 +59,6 @@ const selectSchedule = (item) => {
     fetchSchedule(item);
 };
 
-const fetchAuthor = () => {
-    axios.get(`${import.meta.env.VITE_APP_ENV}/users?role=ADMIN`)
-        .then((result) => {
-            author.list = result.data.data;
-        }).catch((err) => {
-            console.log(err);
-        });
-};
 const fetchSchedule = () => {
     axios.get(`${import.meta.env.VITE_APP_ENV}/schedules`)
         .then((result) => {
@@ -80,6 +70,9 @@ const fetchSchedule = () => {
 
 const postData = () => {
     let body = new FormData();
+
+    const userId = Cookie.get('name_user.id');
+
     body.append('candidateName', formData.candidateName);
     body.append('candidateVisi', formData.candidateVisi);
     body.append('candidateMisi', formData.candidateMisi);
@@ -88,7 +81,12 @@ const postData = () => {
     body.append('candidateRole', RoleCandidate.selected?.name);
     body.append('electionID', Schedule.selected?.electionID);
     body.append('level', Level.selected?.name);
-    body.append('createdBy', author.selected?.id);
+    body.append('createdBy', parseInt(userId));
+
+    // if (RoleCandidate.selected?.name === 'KETUA')
+    //     body.append('ketuaID', parseInt(RoleCandidate.selected?.id))
+    // if (RoleCandidate.selected?.name === 'WAKIL_KETUA')
+    //     body.append('wakilKetuaID', parseInt(RoleCandidate.selected?.id))
 
     formData.loading = true;
 
@@ -99,16 +97,17 @@ const postData = () => {
     )
         .then((result) => {
             console.log(result);
+            successNotif(result?.data?.message ? 'Berhasil membuat data kandidat baru' : result.data?.message);
             formData.loading = false
         }).catch((err) => {
             console.log(err.response.data);
+            errorNotif(err.response.data.message);
             formData.loading = false
         });
     formData.loading = true
 };
 
 onMounted(() => {
-    fetchAuthor();
     fetchSchedule();
 });
 
@@ -175,7 +174,38 @@ onMounted(() => {
                         </div>
 
                     </div>
-                    <div class="space-y-4">
+                    <div class="">
+                        <div class="hidden space-y-2 text-[18px]">
+                            <label for="vote-ketua">Vote Ketua</label>
+                            <SelectComp v-model="RoleCandidate.menu" full>
+                                <div class="py-2 pl-3 pr-2 w-[350px] border rounded-[8px] outline outline-1 border-gray cursor-pointer flex items-center bg-white"
+                                    @click="RoleCandidate.menu = !RoleCandidate.menu" role="activator">
+                                    <p class="text-[15px] flex-1 font-medium text-grey1">
+                                        {{ RoleCandidate.selected?.name ?? "Pilih Opsi" }}
+                                    </p>
+                                    <mdicon name="chevron-down" :class="`transition-all delay-1 ${RoleCandidate.menu ? 'rotate-180' : 'rotate-0'
+                }`" />
+                                </div>
+
+                                <template v-slot:item>
+                                    <div class="max-h-[250px] overflow-y-auto styled-scroll"
+                                        v-if="RoleCandidate.list.length">
+                                        <div class="hover:bg-gray-100 p-2 font-medium rounded-[8px] text-[15px] text-grey1 cursor-pointer"
+                                            v-for="(item, i) in RoleCandidate.list" :key="`category-${i}`"
+                                            @click="selectRoleCandidate(item)">
+                                            {{ item.name }}
+                                        </div>
+                                        <div class="flex justify-center py-1"
+                                            v-if="RoleCandidate.next && !Schedule.load">
+                                        </div>
+                                    </div>
+                                    <p class="text-sm" v-else>...</p>
+                                    <p v-if="RoleCandidate.load" class="text-xs text-center">
+                                        Sedang memuat data...
+                                    </p>
+                                </template>
+                            </SelectComp>
+                        </div>
                         <div class="flex flex-col space-y-2 text-[18px]">
                             <label for="jadwal">Jadwal</label>
                             <SelectComp v-model="Schedule.menu" full>
@@ -206,7 +236,7 @@ onMounted(() => {
                                 </template>
                             </SelectComp>
                         </div>
-                        <div class="flex flex-col space-y-2 text-[18px]">
+                        <div class="flex flex-col space-y-2 text-[18px] mt-4">
                             <label for="level">Level</label>
                             <SelectComp v-model="Level.menu" full>
                                 <div class="py-2 pl-3 pr-2 w-[350px] border rounded-[8px] outline outline-1 border-gray cursor-pointer flex items-center bg-white"
@@ -235,36 +265,7 @@ onMounted(() => {
                                 </template>
                             </SelectComp>
                         </div>
-                        <div class="flex flex-col space-y-2 text-[18px]">
-                            <label for="oleh">Di buat oleh</label>
-                            <SelectComp v-model="author.menu" full>
-                                <div class="py-2 pl-3 pr-2 w-[350px] border rounded-[8px] outline outline-1 border-gray cursor-pointer flex items-center bg-white"
-                                    @click="author.menu = !author.menu" role="activator">
-                                    <p class="text-[15px] flex-1 font-medium text-grey1">
-                                        {{ author.selected?.fullName ?? "Pilih Author" }}
-                                    </p>
-                                    <mdicon name="chevron-down" :class="`transition-all delay-1 ${author.menu ? 'rotate-180' : 'rotate-0'
-                }`" />
-                                </div>
-
-                                <template v-slot:item>
-                                    <div class="max-h-[250px] overflow-y-auto styled-scroll" v-if="author.list.length">
-                                        <div class="hover:bg-gray-100 p-2 font-medium rounded-[8px] text-[15px] text-grey1 cursor-pointer"
-                                            v-for="(item, i) in author.list" :key="`category-${i}`"
-                                            @click="selectAuthor(item)">
-                                            {{ item.fullName }}
-                                        </div>
-                                        <div class="flex justify-center py-1" v-if="author.next && !author.load">
-                                        </div>
-                                    </div>
-                                    <p class="text-sm" v-else>...</p>
-                                    <p v-if="author.load" class="text-xs text-center">
-                                        Sedang memuat data...
-                                    </p>
-                                </template>
-                            </SelectComp>
-                        </div>
-                        <div class="flex flex-col pt-5 space-y-2 text-[18px]">
+                        <div class="flex flex-col pt-5 space-y-2 mt-4 text-[18px]">
                             <label for="uploadCardKandidat">Foto Kandidat</label>
                             <div class="relative inline-block cursor-pointer">
                                 <input class="
