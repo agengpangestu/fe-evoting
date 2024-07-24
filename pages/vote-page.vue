@@ -78,7 +78,7 @@ const votedCandidate = () => {
 
             setTimeout(() => {
                 navigateTo('/greeting-page')
-            }, 5000);
+            }, 4000);
         }).catch((err) => {
             loading.value = false;
             console.error(err);
