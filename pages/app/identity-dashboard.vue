@@ -1,6 +1,8 @@
 <script setup>
 import axios from 'axios';
 
+const { $day } = useNuxtApp();
+
 const paginateIdentity = (page) => {
     vm.page = page;
     fetchIdentity();
@@ -77,6 +79,9 @@ onMounted(() => {
                                     <div class="font-semibold text-left">Nama</div>
                                 </th>
                                 <th class="p-2 whitespace-nowrap">
+                                    <div class="font-semibold text-left">Tanggal dibuat</div>
+                                </th>
+                                <th class="p-2 whitespace-nowrap">
                                     <div class="font-semibold text-center">Aksi</div>
                                 </th>
                             </tr>
@@ -91,12 +96,14 @@ onMounted(() => {
                                 <td class="p-2 whitespace-nowrap">
                                     <div class="text-left">{{ item.fullName }}</div>
                                 </td>
+                                <td class="p-2 whitespace-nowrap">
+                                    <div class="text-left">
+                                        {{ $day(item.createdAt).locale('id').format('DD MMMM YYYY H:mm') }}
+                                    </div>
+                                </td>
                                 <td class="p-2 text-center whitespace-nowrap">
                                     <div
                                         class="flex justify-center space-x-5 text-lg font-medium text-center text-white">
-                                        <nuxt-link :to="`/app/user-create/edit-user-${item.id}`">
-                                            <button class="p-1 px-4 bg-blue-500 rounded">Edit</button>
-                                        </nuxt-link>
                                         <button @click="deleteIdentity(item.identityID)"
                                             class="p-1 px-4 bg-red-500 rounded">Hapus</button>
                                     </div>
