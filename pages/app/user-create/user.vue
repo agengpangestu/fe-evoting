@@ -2,6 +2,12 @@
 import axios from 'axios';
 
 
+const successNotif = (value) => {
+    useNuxtApp().$toast.info(value);
+};
+const errorNotif = (err) => {
+    useNuxtApp().$toast.warn(err);
+};
 
 const selectedRole = (role) => {
     Role.selected = role;
@@ -39,14 +45,16 @@ const postData = () => {
     formData.loading = true;
 
     axios.post(`${import.meta.env.VITE_APP_ENV}/users/post`, body, {
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "multipart/form-data" }
     })
         .then((result) => {
-            console.log(result);
             formData.loading = false;
+            console.log(result.data);
+            successNotif(result.data?.message ? 'Berhasil membuat data user baru' : result.data?.message);
         }).catch((err) => {
             console.log(err.response.data);
             formData.loading = false;
+            errorNotif(err?.response?.data?.message);
         });
     formData.loading = true;
 };
