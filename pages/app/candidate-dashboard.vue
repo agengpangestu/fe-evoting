@@ -1,20 +1,35 @@
 <script setup>
+// import day from '~/plugins/day';
+import { useNuxtApp } from "#app";
 import axios from 'axios';
+
+const { $day } = useNuxtApp();
+
+function truncated(str, num) {
+    if (str.length <= num) {
+        return str;
+    }
+    return str.slice(0, num - 3) + "...";
+};
 
 const paginate = (page) => {
     vm.page = page;
     getCandidates();
 };
 
-const deleteCandidate = (id) => {
-    axios.delete(`${import.meta.env.VITE_APP_ENV}/candidates/${id}/candidate-delete`)
+const deleteCandidate = (candidateID) => {
+    vm.loading = true
+    axios.delete(`${import.meta.env.VITE_APP_ENV}/candidates/${candidateID}/candidate-delete`)
         .then((result) => {
+            vm.loading = false;
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
         }).catch((err) => {
+            vm.loading = false;
             console.log(err);
         });
+    vm.loading = true;
 };
 
 const vm = reactive({
@@ -34,12 +49,14 @@ const getCandidates = async () => {
         .then((result) => {
             vm.listCandidates = result.data.data;
             vm.totalItems = result.data.countPages;
-            vm.totalPages = result.data.totalItems;
+            vm.totalPages = result.data.totalPages;
             vm.currentPage = result.data.currentPage;
             vm.loading = false;
         }).catch((err) => {
             console.log(err);
+            vm.loading = false;
         })
+    vm.loading = true;
 };
 
 onMounted(() => {
@@ -67,10 +84,13 @@ onMounted(() => {
                                     <div class="font-semibold text-left">Nama Kandidat</div>
                                 </th>
                                 <th class="p-2 whitespace-nowrap">
+                                    <div class="font-semibold text-left">Group / Jabatan</div>
+                                </th>
+                                <th class="p-2 whitespace-nowrap">
                                     <div class="font-semibold text-left">Tingkat</div>
                                 </th>
                                 <th class="p-2 whitespace-nowrap">
-                                    <div class="font-semibold text-left">Dibuat Tanggal</div>
+                                    <div class="font-semibold text-left">Jadwal</div>
                                 </th>
                                 <th class="p-2 whitespace-nowrap">
                                     <div class="font-semibold text-left">Detil</div>
@@ -89,27 +109,41 @@ onMounted(() => {
                                     <div class="font-medium text-gray-800">{{ item.candidateName }}</div>
                                 </td>
                                 <td class="p-2 whitespace-nowrap">
+                                    <div class="font-medium text-gray-800">{{ item.group }} / {{ item.candidateRole }}
+                                    </div>
+                                </td>
+                                <td class="p-2 whitespace-nowrap">
                                     <div class="text-left">{{ item.level }}</div>
                                 </td>
                                 <td class="p-2 whitespace-nowrap">
-                                    <div class="text-left">{{ item.createdAt }}</div>
+                                    <div class="text-left">
+                                        {{ truncated(item.Election.electionName, 15) }}
+                                    </div>
                                 </td>
                                 <td class="p-2 whitespace-nowrap">
                                     <div class="font-medium text-left text-green-500">Lihat</div>
                                 </td>
                                 <td class="p-2 whitespace-nowrap">
-                                    <div class="font-medium text-left text-green-500">
-                                        <img :src="item.candidateAvatar" class="w-[200px] h-[200px]" alt="" />
+                                    <div class="font-medium text-left">
+                                        <img :src="item.candidateAvatar"
+                                            class="w-[100px] h-[100px] object-center object-cover"
+                                            alt="pict-candidate" />
                                     </div>
                                 </td>
                                 <td class="p-2 text-center whitespace-nowrap">
                                     <div
-                                        class="flex justify-center space-x-5 text-lg font-medium text-center text-white">
+                                        class="flex flex-col items-center justify-center space-y-2 text-lg font-medium text-center text-white">
                                         <nuxt-link :to="`/app/candidate-create/edit-candidate-${item.candidateID}`">
-                                            <button class="p-1 px-4 bg-blue-500 rounded">Edit</button>
+                                            <button class="p-1 w-[110px] bg-blue-500 rounded">
+                                                <h6 v-if="!vm.loading">Edit</h6>
+                                                <h6 v-else>Loading</h6>
+                                            </button>
                                         </nuxt-link>
                                         <button @click="deleteCandidate(item.candidateID)"
-                                            class="p-1 px-4 bg-red-500 rounded">Hapus</button>
+                                            class="p-1 w-[110px] bg-red-500 rounded">
+                                            <h6 v-if="!vm.loading">Delete</h6>
+                                            <h6 v-else>Loading</h6>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -220,8 +254,8 @@ onMounted(() => {
                             </svg>
                         </span>
                     </template></vue-awesome-paginate>
-            </div>
-        </div> -->
+            </div> -->
+        <!-- </div> -->
     </div>
 </template>
 <style>
