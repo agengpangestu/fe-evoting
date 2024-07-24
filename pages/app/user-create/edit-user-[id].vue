@@ -5,6 +5,13 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const userId = ref(parseInt(route.params.id));
 
+const successNotif = (value) => {
+    useNuxtApp().$toast.info(value);
+};
+const errorNotif = (err) => {
+    useNuxtApp().$toast.warn(err);
+};
+
 const selectedRole = (role) => {
     Role.selected = role;
     console.log(Role.selected);
@@ -35,7 +42,7 @@ const fetchData = () => {
         .then((result) => {
             formData.loading = false;
             let rawData = result.data.data;
-            formData.username = rawData.username;
+            // formData.username = rawData.username;
             formData.email = rawData.email;
             Role.selected = rawData.role;
             formData.age = rawData.age;
@@ -51,8 +58,6 @@ const fetchData = () => {
 
 const postData = () => {
     let body = new FormData();
-    body.append('username', formData.username);
-    body.append('password', formData.password);
     body.append('email', formData.email);
     body.append('role', Role.selected?.name || Role.selected);
     body.append('fullName', formData.fullName);
@@ -60,19 +65,18 @@ const postData = () => {
     body.append('identityNumber', formData.identityNumber);
     body.append('identityPicture', formData.uploadIdentity);
 
-    body.append('newPassword', formData.newPassword);
-
     formData.loading = true;
 
     axios.patch(`${import.meta.env.VITE_APP_ENV}/users/${userId.value}/user-update`, body, {
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "multipart/form-data" }
     })
         .then((result) => {
             console.log(result);
             formData.loading = false;
+            successNotif(result.data?.message);
         }).catch((err) => {
-            console.log(err.response.data);
             formData.loading = false;
+            errorNotif(err?.response?.data?.message);
         });
     formData.loading = true;
 };
@@ -92,22 +96,9 @@ onMounted(() => {
                 <div class="flex justify-center space-x-5">
                     <div class="space-y-4">
                         <div class="flex flex-col space-y-2 text-[18px]">
-                            <label for="username">Username</label>
-                            <input placeholder="Username"
-                                class="w-[350px] remove-arrow outline outline-1 rounded pl-2 py-1"
-                                v-model="formData.username" type="text" name="username" id="username">
-                        </div>
-                        <div class="flex flex-col space-y-2 text-[18px]">
-                            <label for="oldPassword">Password Lama</label>
-                            <input placeholder="Password Lama"
-                                class="w-[350px] remove-arrow outline outline-1 rounded pl-2 py-1"
-                                v-model="formData.password" type="oldPassword" name="oldPassword" id="oldPassword">
-                        </div>
-                        <div class="flex flex-col space-y-2 text-[18px]">
-                            <label for="password">Password</label>
-                            <input placeholder="Password"
-                                class="w-[350px] remove-arrow outline outline-1 rounded pl-2 py-1"
-                                v-model="formData.newPassword" type="password" name="password" id="password">
+                            <label for="fullname">Nama Lengkap</label>
+                            <input placeholder="Nama Lengkap" class="w-[350px] outline outline-1 rounded pl-2 py-1"
+                                v-model="formData.fullName" type="text" name="fullname" id="fullname">
                         </div>
                         <div class="flex flex-col space-y-2 text-[18px]">
                             <label for="email">Email</label>
@@ -154,11 +145,7 @@ onMounted(() => {
                                 v-model="formData.identityNumber" type="number" min="0" name="identityNumber"
                                 id="identityNumber">
                         </div>
-                        <div class="flex flex-col space-y-2 text-[18px]">
-                            <label for="fullname">Nama Lengkap</label>
-                            <input placeholder="Nama Lengkap" class="w-[350px] outline outline-1 rounded pl-2 py-1"
-                                v-model="formData.fullName" type="text" name="fullname" id="fullname">
-                        </div>
+
                         <div class="flex flex-col space-y-2 text-[18px]">
                             <label for="umur">Umur</label>
                             <input placeholder="Umur" class="w-[350px] remove-arrow outline outline-1 rounded pl-2 py-1"
