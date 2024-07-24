@@ -69,7 +69,9 @@ const votedCandidate = () => {
         .then((result) => {
             loading.value = false;
             console.log(result);
-            successNotif(result.data?.message)
+            successNotif(result.data?.message
+                ? 'Berhasil melakukan voting' : result.data?.message
+            )
             Cookie.remove('user_pemilih.id');
             Cookie.remove('user_pemilih.name');
             Cookie.remove('user_pemilih.token');
@@ -108,7 +110,7 @@ const fetchCandidate = async () => {
         const data = await axios.get(`${import.meta.env.VITE_APP_ENV}/schedules/?status=${vm.status = 'ACTIVE'}`);
 
         if (!data.data.data.length) {
-            errorNotif('Tidak ada pemilihan');
+            errorNotif('Maaf, tidak ada pemilihan hari ini');
         }
         else {
             const electionID = data.data.data[0].electionID;
