@@ -77,13 +77,15 @@ const submitForm = () => {
             formData.loading = false;
             const user_pemilih = result?.data?.data[0],
                 token = result.data?.token;
-            console.log(token);
 
             Cookie.set('user_pemilih.id', user_pemilih.id);
             Cookie.set('user_pemilih.name', user_pemilih.nama_pemilih);
             Cookie.set('user_pemilih.token', token)
-            successNotif(result.data?.message);
+            successNotif(result.data?.message
+                ? 'Berhasil melakukan pendaftaran' : result.data?.message
+            );
 
+            // redirect to page vote-page
             setTimeout(() => {
                 navigateTo('/vote-page')
             }, 3000);
