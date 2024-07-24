@@ -57,7 +57,7 @@ const postData = () => {
     )
         .then((result) => {
             console.log(result);
-            successNotif(result?.data?.message);
+            successNotif(result?.data?.message ? 'Berhasil membuat data jadwal baru' : result.data?.message);
             formData.loading = false
         }).catch((err) => {
             console.log(err.response.data);
