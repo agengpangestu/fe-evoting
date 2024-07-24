@@ -1,14 +1,29 @@
 <script setup>
+import Cookie from 'js-cookie';
+
+const { $authentication } = useNuxtApp();
+
+const name = ref(Cookie.get('name_user.name')),
+    role = ref(Cookie.get('name_user.role'));
+
+const logOut = () => {
+    $authentication.logOut();
+};
 let buttons = [
-    // { name: "Menu", link: "/app/menu/list-menu", },
-    // { name: "Kategori", link: "/app/category/list-category", },
-    // { name: "Article", link: "/app/article/list-article", icon: icon1 },
     { name: "User", link: "/app/user-dashboard", },
-    // { name: "User", link: "/app/promo/list-user", icon: icon5 },
+    { name: "Kandidat", link: "/app/candidate-dashboard", },
+    { name: "Jadwal", link: "/app/jadwal-dashboard", },
+    { name: "Vote", link: "/app/vote-dashboard", },
+    { name: "Identitas", link: "/app/identity-dashboard", },
 ];
 </script>
 <template>
     <div class="w-[180px] h-auto fixed z-20 inset-y-2.5 left-2 bg-white drop-shadow rounded-[10px]">
+        <div class="flex justify-center p-5">
+            <h1 class="text-[18px]">
+                Halo, {{ role === "ADMIN" ? 'Admin' : role }} {{ name }}
+            </h1>
+        </div>
         <div class="flex flex-col left-5 top-5 gap-5 py-5 px-2.5 font-medium font-poppins">
             <div class="flex flex-col gap-2.5">
                 <div v-for="(item, i) in buttons" :key="`${i}`">
@@ -31,7 +46,7 @@ let buttons = [
                     <div class="flex items-center space-x-2">
                         <!-- <img :src="icon3" width="25" alt="icon-logout"> -->
                         <h1 class="text-start">
-                            Log Out
+                            Logout
                         </h1>
                     </div>
                 </button>
