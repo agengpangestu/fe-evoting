@@ -2,9 +2,9 @@
 import axios from 'axios';
 import Cookie from 'js-cookie';
 
-// definePageMeta({
-//     middleware: ['auth-vote']
-// });
+definePageMeta({
+    middleware: ['auth-vote']
+});
 
 const successNotif = (value) => {
     useNuxtApp().$toast.info(value);
