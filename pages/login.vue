@@ -49,7 +49,7 @@ const logedIn = async () => {
                     <div class="flex flex-col space-y-2 text-[18px]">
                         <label for="password">Password</label>
                         <input placeholder="Password" class="w-[350px] outline outline-1 rounded pl-2 py-1"
-                            v-model="formData.password" type="text" name="password" id="password">
+                            v-model="formData.password" type="password" name="password" id="password">
                     </div>
                     <div class="flex justify-center pt-8">
                         <button v-if="!formData.loading"
