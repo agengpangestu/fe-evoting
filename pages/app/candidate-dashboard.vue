@@ -3,18 +3,28 @@
 import { useNuxtApp } from "#app";
 import axios from 'axios';
 
-const { $day } = useNuxtApp();
+import DetilComp from '@/components/DetilComp.vue';
 
+const { $day } = useNuxtApp();
+const selected = ref('');
+
+const errorNotif = (err) => {
+    useNuxtApp().$toast.warn(err);
+};
 function truncated(str, num) {
     if (str.length <= num) {
         return str;
     }
     return str.slice(0, num - 3) + "...";
 };
-
 const paginate = (page) => {
     vm.page = page;
     getCandidates();
+};
+const view = (item) => {
+    selected.value = item;
+    vm.view = true;
+    candidateById(item.id);
 };
 
 const deleteCandidate = (candidateID) => {
@@ -42,7 +52,22 @@ const vm = reactive({
     page: 1,
     loading: true
 });
+const dialog = reactive({
+    data: null,
+    loading: true,
+});
 
+const candidateById = () => {
+    dialog.loading = true;
+    axios.get(`${import.meta.env.VITE_APP_ENV}/candidates/`)
+        .then((res) => {
+            dialog.loading = false;
+            dialog.data = res.data.data
+            console.log(dialog.data);
+        }).catch((err) => {
+            errorNotif(err.response.data.message)
+        })
+};
 const getCandidates = async () => {
     vm.loading = true;
     axios.get(`${import.meta.env.VITE_APP_ENV}/candidates/?page=${vm.page}&limit=${vm.limit}&sortByCreated=${vm.sortByDate}`)
@@ -121,7 +146,9 @@ onMounted(() => {
                                     </div>
                                 </td>
                                 <td class="p-2 whitespace-nowrap">
-                                    <div class="font-medium text-left text-green-500">Lihat</div>
+                                    <div class="font-medium text-left text-green-500 cursor-pointer">
+                                        <button @click="view(item)">Lihat</button>
+                                    </div>
                                 </td>
                                 <td class="p-2 whitespace-nowrap">
                                     <div class="font-medium text-left">
@@ -257,6 +284,65 @@ onMounted(() => {
             </div> -->
         <!-- </div> -->
     </div>
+    <DetilComp :dialog="vm.view" @close="vm.view = false">
+        <div v-if="!dialog.loading" style="max-height: 100vh"
+            class="rounded-xl bg-white shadow-lg w-[840px] [@media(max-width:650px)]:w-[95%]">
+            <div class="flex justify-end px-2 pt-2">
+                <button
+                    class="rounded-full p-[6px] hover:bg-red-500/20 active:bg-red-500/50 transition duration-150 ease-in-out outline-none h-max"
+                    @click="vm.view = false">
+                    <mdicon name="close" class="text-red-500" size="21" />
+                </button>
+            </div>
+            <div v-if="selected" class="w-auto h-auto p-2 px-4 space-y-2.5">
+                <div class="flex justify-center gap-2.5">
+                    <div class="">
+                        <img :src="selected.candidateAvatar" class="h-[150px] w-[150px] object-center object-cover"
+                            :alt="selected.candidateName" loading="lazy">
+                    </div>
+
+                </div>
+                <div class="flex items-center">
+                    <div class="grid gap-1.5">
+                        <div class="grid grid-cols-2">
+                            <div class="relative">
+                                <h5 class="text-slate-400">Nama Kandidat</h5>
+                                <span>{{ selected.candidateName }}</span>
+                            </div>
+                            <div class="relative">
+                                <h5 class="text-slate-400">Jabatan</h5>
+                                <span>{{ selected.candidateRole }}</span>
+                            </div>
+                            <div class="relative">
+                                <h5 class="text-slate-400">Group</h5>
+                                <span>{{ selected.group }}</span>
+                            </div>
+                            <div class="relative">
+                                <h5 class="text-slate-400">Jadwal</h5>
+                                <span>{{ truncated(selected.Election.electionName, 15) }}</span>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <h5 class="text-slate-400">Visi</h5>
+                            <span>{{ selected.candidateVisi }}</span>
+                        </div>
+                        <div class="relative">
+                            <h5 class="text-slate-400">Misi</h5>
+                            <span>{{ selected.candidateMisi }}</span>
+                        </div>
+                        <div>
+                            <h5 class="text-slate-400">Di buat</h5>
+                            <span>{{ $day(selected.createdAt).locale('id').format('DD MMMM YYYY H:mm') }}</span>
+                        </div>
+                        <div>
+                            <h5 class="text-slate-400">Di edit</h5>
+                            <span>{{ $day(selected.updatedAt).locale('id').format('DD MMMM YYYY H:mm') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </DetilComp>
 </template>
 <style>
 .btn {
