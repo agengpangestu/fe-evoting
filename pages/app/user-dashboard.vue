@@ -1,8 +1,14 @@
 <script setup>
 import axios from 'axios';
 
-const { $day } = useNuxtApp();
+import DetilComp from '@/components/DetilComp.vue';
 
+const { $day } = useNuxtApp();
+const selected = ref('');
+
+const errorNotif = (err) => {
+    useNuxtApp().$toast.warn(err);
+};
 const paginateAdmin = (page) => {
     vm.page = page;
     GetUsers();
@@ -10,6 +16,11 @@ const paginateAdmin = (page) => {
 const paginatePemilih = (page) => {
     userPemilih.page = page;
     GetUsersByRole();
+};
+const view = (item) => {
+    selected.value = item;
+    vm.view = true;
+    userById(item.id);
 };
 
 const deleteUserAdmin = (id) => {
@@ -54,7 +65,21 @@ const userPemilih = reactive({
     page: 1,
     loading: true
 });
+const dialog = reactive({
+    data: null,
+    loading: true,
+});
 
+const userById = () => {
+    dialog.loading = true;
+    axios.get(`${import.meta.env.VITE_APP_ENV}/users/`)
+        .then((res) => {
+            dialog.loading = false;
+            dialog.data = res.data.data
+        }).catch((err) => {
+            errorNotif(err.response.data.message)
+        })
+};
 const GetUsers = async () => {
     vm.loading = true;
     // return new Promise((resolve, reject) => {
@@ -152,7 +177,9 @@ onMounted(() => {
                                     </div>
                                 </td>
                                 <td class="p-2 whitespace-nowrap">
-                                    <div class="font-medium text-left text-green-500">Lihat</div>
+                                    <div class="font-medium text-left text-green-500 cursor-pointer">
+                                        <button @click="view(item)">Lihat</button>
+                                    </div>
                                 </td>
                                 <td class="p-2 text-center whitespace-nowrap">
                                     <div
@@ -299,6 +326,55 @@ onMounted(() => {
             </div>
         </div>
     </div>
+    <DetilComp :dialog="vm.view" @close="vm.view = false">
+        <div v-if="!dialog.loading" style="max-height: 100vh"
+            class="rounded-xl bg-white shadow-lg w-[540px] [@media(max-width:650px)]:w-[95%]">
+            <div class="flex justify-end px-2 pt-2">
+                <button
+                    class="rounded-full p-[6px] hover:bg-red-500/20 active:bg-red-500/50 transition duration-150 ease-in-out outline-none h-max"
+                    @click="vm.view = false">
+                    <mdicon name="close" class="text-red-500" size="21" />
+                </button>
+            </div>
+            <div v-if="selected" class="w-auto h-auto p-2 px-4 space-y-2.5">
+                <div class="flex justify-center gap-2.5">
+                    <div class="">
+                        <img :src="selected.identityPicture" class="h-[250px] w-[250px] object-center object-cover"
+                            :alt="selected.fullName" loading="lazy">
+                    </div>
+
+                </div>
+                <div class="flex items-center">
+                    <div class="grid gap-1.5">
+                        <div class="relative">
+                            <h5 class="text-slate-400">Nama Lengkap</h5>
+                            <span>{{ selected.fullName }}</span>
+                        </div>
+                        <div class="relative">
+                            <h5 class="text-slate-400">Username</h5>
+                            <span>{{ selected.username }}</span>
+                        </div>
+                        <div>
+                            <h5 class="text-slate-400">Email</h5>
+                            <span>{{ selected.email }}</span>
+                        </div>
+                        <div>
+                            <h5 class="text-slate-400">Role</h5>
+                            <p>{{ selected.role }}</p>
+                        </div>
+                        <div>
+                            <h5 class="text-slate-400">Di buat</h5>
+                            <span>{{ $day(selected.createdAt).locale('id').format('DD MMMM YYYY H:mm') }}</span>
+                        </div>
+                        <div>
+                            <h5 class="text-slate-400">Di edit</h5>
+                            <span>{{ $day(selected.updatedAt).locale('id').format('DD MMMM YYYY H:mm') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </DetilComp>
 </template>
 <style>
 .btn {
