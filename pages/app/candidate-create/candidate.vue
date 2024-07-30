@@ -128,13 +128,19 @@ onMounted(() => {
                         </div>
                         <div class="flex flex-col space-y-2 text-[18px]">
                             <label for="visi">Visi</label>
-                            <input placeholder="Visi" class="w-[350px] outline outline-1 rounded pl-2 py-1"
-                                v-model="formData.candidateVisi" type="text" name="visi" id="visi">
+                            <textarea v-model="formData.candidateVisi"
+                                class="w-[350px] outline outline-1 rounded pl-2 py-1" name="visi" id="visi" cols="30"
+                                rows="10" />
+                            <!-- <input placeholder="Visi" class="w-[350px] outline outline-1 rounded pl-2 py-1"
+                                v-model="formData.candidateVisi" type="text" name="visi" id="visi"> -->
                         </div>
                         <div class="flex flex-col space-y-2 text-[18px]">
                             <label for="misi">Misi</label>
-                            <input placeholder="Misi" class="w-[350px] outline outline-1 rounded pl-2 py-1"
-                                v-model="formData.candidateMisi" type="text" name="misi" id="misi">
+                            <textarea v-model="formData.candidateMisi"
+                                class="w-[350px] outline outline-1 rounded pl-2 py-1" name="misi" id="misi" cols="30"
+                                rows="10" />
+                            <!-- <input placeholder="Misi" class="w-[350px] outline outline-1 rounded pl-2 py-1"
+                                v-model="formData.candidateMisi" type="text" name="misi" id="misi"> -->
                         </div>
                         <div class="flex flex-col space-y-2 text-[18px]">
                             <label for="group">Group</label>
