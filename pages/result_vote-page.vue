@@ -1,6 +1,7 @@
 <script setup>
 import axios from 'axios';
 
+import logo from '@/assets/img/logo/logo_unsa.png';
 
 const loading = ref(true);
 
@@ -64,8 +65,9 @@ onMounted(() => {
 <template>
     <div class="flex items-center justify-center w-full h-auto p-10 bg-white">
         <div class="space-y-5">
-            <div>
+            <div class="flex items-center justify-between">
                 <h1 class="text-[22px] max-[860px]:text-[18px]">E-Voting</h1>
+                <img class="w-[80px] [@media(max-width:540px)]:w-[50px]" :src="logo" alt="logo-unsa">
             </div>
             <div class="w-auto h-auto p-10 max-[540px]:p-4 space-y-10 bg-white rounded drop-shadow">
                 <div class="flex justify-center font-bold text-[22px] max-[840px]:text-[20px] max-[540px]:text-[18px]">
