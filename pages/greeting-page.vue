@@ -1,4 +1,5 @@
 <script setup>
+import logo from '@/assets/img/logo/logo_unsa.png';
 
 </script>
 <template>
@@ -9,12 +10,13 @@
             bg-white 
             [@media(max-width:540px)]:w-auto">
         <div class="w-auto space-y-5">
-            <div class="w-auto">
+            <div class="flex items-center justify-between w-auto">
                 <h1 class="
                     text-[24px] 
                     [@media(max-width:860px)]:text-[20px] 
                     [@media(max-width:540px)]:text-[18px]">
                     E-Voting</h1>
+                <img class="w-[80px] [@media(max-width:540px)]:w-[50px]" :src="logo" alt="logo-unsa">
             </div>
             <div class="w-auto h-auto p-5 [@media(max-width:860px)]:p-4">
                 <div class="
