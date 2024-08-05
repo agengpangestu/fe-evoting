@@ -2,6 +2,8 @@
 import axios from 'axios';
 import Cookie from 'js-cookie';
 
+import logo from '@/assets/img/logo/logo_unsa.png';
+
 definePageMeta({
     middleware: ['auth-vote']
 });
@@ -136,8 +138,9 @@ onMounted(() => {
 <template>
     <div class="flex items-center justify-center w-full h-auto p-10 max-[550px]:p-5 bg-white">
         <div class="space-y-5">
-            <div>
+            <div class="flex items-center justify-between">
                 <h1 class="text-[22px] max-[700px]:text-[16px] max-[550px]:text-[18px]">E-Voting</h1>
+                <img class="w-[80px] [@media(max-width:540px)]:w-[50px]" :src="logo" alt="logo-unsa">
             </div>
             <div class="
                     w-[800px] 
