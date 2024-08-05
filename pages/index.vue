@@ -1,3 +1,6 @@
+<script setup>
+import logo from '@/assets/img/logo/logo_unsa.png';
+</script>
 <template>
   <div class="flex items-center justify-center w-screen h-screen p-10 bg-white ">
     <div class="
@@ -17,6 +20,9 @@
               [@media(max-width:540px)]:text-[18px]">
         <h2>DI Website Pemilihan Ketua</h2>
         <h2>BEM UNSA</h2>
+        <div class="flex justify-center mt-5">
+          <img class="w-[200px] [@media(max-width:540px)]:w-[100px]" :src="logo" alt="logo-unsa">
+        </div>
       </div>
       <div class="
               text-[24px] text-center 
