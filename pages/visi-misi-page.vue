@@ -1,6 +1,8 @@
 <script setup>
 import axios from 'axios';
 
+import logo from '@/assets/img/logo/logo_unsa.png';
+
 const successNotif = (value) => {
     useNuxtApp().$toast.info(value);
 };
@@ -60,9 +62,13 @@ onMounted(() => {
                     rounded drop-shadow">
                 <div class="
                         flex 
+                        flex-col
+                        items-center
                         justify-center 
                         font-bold text-[22px]
                         max-[700px]:text-[20px] max-[550px]:text-[18px]">
+                    <img class="w-[80px] [@media(max-width:540px)]:w-[50px] [@media(max-width:540px)]:mb-2.5 mb-5"
+                        :src="logo" alt="logo-unsa">
                     <h2>Visi dan Misi Kandidat</h2>
                 </div>
 
@@ -70,12 +76,14 @@ onMounted(() => {
                     <div class="flex items-center justify-center">
                         <div v-if="Object.keys(vm.data).length">
                             <div v-for="(candidate, i) in vm.data" :key="i">
-                                <h2 class="text-[22px] max-[700px]:text-[20px] max-[640px]:text-[18px] font-semibold">Grup {{ i }}
+                                <h2 class="text-[22px] max-[700px]:text-[20px] max-[640px]:text-[18px] font-semibold">
+                                    Grup {{ i }}
                                 </h2>
                                 <div class="flex max-[700px]:flex-col">
                                     <div v-for="item in candidate.DATA" :key="candidate.candidateID"
                                         class="w-[350px] max-[840px]:w-[300px] max-[700px]:w-auto h-auto space-y-5 p-2.5">
-                                        <h3 class="text-[20px] max-[700px]:text-[18px] underline">{{ item.candidateName }}</h3>
+                                        <h3 class="text-[20px] max-[700px]:text-[18px] underline">{{ item.candidateName
+                                            }}</h3>
                                         <div class="text-center text-[18px] max-[700px]:text-[16px]">
                                             <h4 class="font-bold">Visi</h4>
                                             <p>{{ item.candidateVisi ? item.candidateVisi : 'Tidak ada Visi' }}</p>
