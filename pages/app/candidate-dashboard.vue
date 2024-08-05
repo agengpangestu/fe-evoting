@@ -303,8 +303,8 @@ onMounted(() => {
 
                 </div>
                 <div class="flex items-center">
-                    <div class="grid gap-1.5">
-                        <div class="grid grid-cols-2">
+                    <div class="flex space-x-2.5">
+                        <div class="grid w-auto">
                             <div class="relative">
                                 <h5 class="text-slate-400">Nama Kandidat</h5>
                                 <span>{{ selected.candidateName }}</span>
@@ -319,24 +319,26 @@ onMounted(() => {
                             </div>
                             <div class="relative">
                                 <h5 class="text-slate-400">Jadwal</h5>
-                                <span>{{ truncated(selected.Election.electionName, 15) }}</span>
+                                <span>{{ selected.Election.electionName }}</span>
                             </div>
                         </div>
-                        <div class="relative">
-                            <h5 class="text-slate-400">Visi</h5>
-                            <span>{{ selected.candidateVisi }}</span>
-                        </div>
-                        <div class="relative">
-                            <h5 class="text-slate-400">Misi</h5>
-                            <span>{{ selected.candidateMisi }}</span>
-                        </div>
-                        <div>
-                            <h5 class="text-slate-400">Di buat</h5>
-                            <span>{{ $day(selected.createdAt).locale('id').format('DD MMMM YYYY H:mm') }}</span>
-                        </div>
-                        <div>
-                            <h5 class="text-slate-400">Di edit</h5>
-                            <span>{{ $day(selected.updatedAt).locale('id').format('DD MMMM YYYY H:mm') }}</span>
+                        <div class="grid w-full grid-cols-2 gap-2">
+                            <div class="relative">
+                                <h5 class="text-slate-400">Visi</h5>
+                                <span>{{ selected.candidateVisi ? selected.candidateVisi : "Tidak ada Visi" }}</span>
+                            </div>
+                            <div class="relative">
+                                <h5 class="text-slate-400">Misi</h5>
+                                <span>{{ selected.candidateMisi ? selected.candidateMisi : "Tidak ada Misi" }}</span>
+                            </div>
+                            <div>
+                                <h5 class="text-slate-400">Di buat</h5>
+                                <span>{{ $day(selected.createdAt).locale('id').format('DD MMMM YYYY H:mm') }}</span>
+                            </div>
+                            <div>
+                                <h5 class="text-slate-400">Di edit</h5>
+                                <span>{{ $day(selected.updatedAt).locale('id').format('DD MMMM YYYY H:mm') }}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
