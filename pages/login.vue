@@ -1,6 +1,8 @@
 <script setup>
 import axios from 'axios';
 
+import logo from '@/assets/img/logo/logo_unsa.png';
+
 const { $authentication } = useNuxtApp();
 
 definePageMeta({
@@ -34,10 +36,11 @@ const logedIn = async () => {
 
 <template>
     <div class="flex items-center justify-center w-screen h-screen p-10 bg-white">
-        <div class="bg-white shadow-md drop-shadow w-[500px] p-5 h-[400px] rounded">
+        <div class="bg-white shadow-md drop-shadow w-[500px] p-5 h-auto rounded">
             <form @submit.prevent="logedIn">
 
-                <div class="flex justify-center">
+                <div class="flex flex-col items-center justify-center space-y-5">
+                    <img class="w-[80px] [@media(max-width:540px)]:w-[50px]" :src="logo" alt="logo-unsa">
                     <h1 class="text-[24px]">Log in ke Dashboard E-Voting</h1>
                 </div>
                 <div class="flex flex-col items-center mt-5 space-y-5">
