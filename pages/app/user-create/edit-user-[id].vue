@@ -47,7 +47,7 @@ const fetchData = () => {
             Role.selected = rawData.role;
             formData.age = rawData.age;
             formData.fullName = rawData.fullName;
-            formData.identityNumber = rawData.identityNumber;
+            // formData.identityNumber = rawData.identityNumber;
             formData.uploadIdentity = rawData.identityPicture;
         }).catch((err) => {
             console.log(err.response);
@@ -62,7 +62,7 @@ const postData = () => {
     body.append('role', Role.selected?.name || Role.selected);
     body.append('fullName', formData.fullName);
     body.append('age', formData.age);
-    body.append('identityNumber', formData.identityNumber);
+    // body.append('identityNumber', formData.identityNumber);
     body.append('identityPicture', formData.uploadIdentity);
 
     formData.loading = true;
@@ -138,13 +138,13 @@ onMounted(() => {
 
                     </div>
                     <div class="space-y-4">
-                        <div class="flex flex-col space-y-2 text-[18px]">
+                        <!-- <div class="flex flex-col space-y-2 text-[18px]">
                             <label for="identityNumber">Nomor Identitas</label>
                             <input placeholder="Nomor Identitas"
                                 class="w-[350px] remove-arrow outline outline-1 rounded pl-2 py-1"
                                 v-model="formData.identityNumber" type="number" min="0" name="identityNumber"
                                 id="identityNumber">
-                        </div>
+                        </div> -->
 
                         <div class="flex flex-col space-y-2 text-[18px]">
                             <label for="umur">Umur</label>
