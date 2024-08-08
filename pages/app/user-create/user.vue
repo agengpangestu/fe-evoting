@@ -42,6 +42,8 @@ const postData = () => {
     body.append('identityNumber', formData.identityNumber);
     body.append('identityPicture', formData.uploadIdentity);
 
+    if(!Role.selected) errorNotif('Pilih role dulu')
+
     formData.loading = true;
 
     axios.post(`${import.meta.env.VITE_APP_ENV}/users/post`, body, {
