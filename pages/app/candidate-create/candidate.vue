@@ -129,7 +129,7 @@ const Major = reactive({
 const Class = reactive({
     list: [
         { id: 0, value: "REGULER_PAGI", name: "Reguler Pagi" },
-        { id: 1, value: "REGULER_SORE", name: "Reguler Malam" },
+        { id: 1, value: "REGULER_MALAM", name: "Reguler Malam" },
     ],
     menu: false,
     load: false,
