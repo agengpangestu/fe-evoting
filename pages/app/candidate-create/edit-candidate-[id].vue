@@ -225,7 +225,13 @@ const postData = () => {
 };
 
 const classComputed = computed(() => {
-    if (Class.selected) return Class.selected.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ')
+    if (Class.selected) return Class.selected.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ');
+});
+const classMajor = computed(() =>   {
+    if (Major.selected) return Major.selected.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ');
+});
+const classFaculty = computed(() =>   {
+    if (Faculty.selected) return Faculty.selected.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ');
 });
 
 onMounted(() => {
@@ -261,7 +267,7 @@ onMounted(() => {
                                 <div class="py-2 pl-3 pr-2 w-[350px] border rounded-[8px] outline outline-1 cursor-pointer flex items-center bg-white"
                                     @click="Faculty.menu = !Faculty.menu" role="activator">
                                     <p class="text-[15px] flex-1 font-medium text-grey1">
-                                        {{ Faculty.selected?.name ?? Faculty.selected ?? "Pilih Fakultas" }}
+                                        {{ Faculty.selected?.name ?? classFaculty ?? "Pilih Fakultas" }}
                                     </p>
                                     <mdicon name="chevron-down" :class="`
                                             transition-all 
@@ -292,7 +298,7 @@ onMounted(() => {
                                 <div class="py-2 pl-3 pr-2 w-[350px] border rounded-[8px] outline outline-1 cursor-pointer flex items-center bg-white"
                                     @click="Major.menu = !Major.menu" role="activator">
                                     <p class="text-[15px] flex-1 font-medium text-grey1">
-                                        {{ Major.selected?.name ?? Major.selected ?? "Pilih Jurusan" }}
+                                        {{ Major.selected?.name ?? classMajor ?? "Pilih Jurusan" }}
                                     </p>
                                     <mdicon name="chevron-down" :class="`
                                             transition-all 
