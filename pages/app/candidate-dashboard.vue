@@ -340,6 +340,20 @@ onMounted(() => {
                                 <span>{{ $day(selected.updatedAt).locale('id').format('DD MMMM YYYY H:mm') }}</span>
                             </div>
                         </div>
+                        <div>
+                            <div class="relative">
+                                <h5 class="text-slate-400">Fakultas</h5>
+                                <span>{{ selected.candidateFaculty }}</span>
+                            </div>
+                            <div class="relative">
+                                <h5 class="text-slate-400">Jurusan</h5>
+                                <span>{{ selected.candidateMajor }}</span>
+                            </div>
+                             <div class="relative">
+                                <h5 class="text-slate-400">Kelas</h5>
+                                <span>{{ selected.candidateClass }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
