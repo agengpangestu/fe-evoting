@@ -21,6 +21,9 @@ const formData = reactive({
     candidateMisi: '',
     candidateAvatar: null,
     candidateRole: '',
+    faculty: '',
+    major: '',
+    class: '',
     group: '',
     electionID: null,
     level: '',
@@ -30,9 +33,7 @@ const formData = reactive({
 const RoleCandidate = reactive({
     list: [
         { name: "KETUA", },
-        { name: "WAKIL_KETUA", },
-        { name: "NONE", },
-        { name: "PERORANGAN" }
+        { name: "WAKIL_KETUA", }
     ],
     menu: false,
     load: false,
@@ -50,6 +51,92 @@ const Schedule = reactive({
     load: false,
     selected: null
 });
+const Faculty = reactive({
+    list: [
+        {
+            id: 0, value: "Ilmu_Sosial_dan_Ilmu_Politik", name: "Ilmu Sosial dan Ilmu Politik",
+            major:
+                [
+                    { id: 0, value: "Ilmu_Administrasi_Negara", name: "Ilmu Administrasi Negara" },
+                    { id: 1, value: "Komunikasi", name: "Komunikasi" },
+                ]
+        },
+        {
+            id: 1, value: "Ekonomi", name: "Ekonomi",
+            major:
+                [
+                    { id: 2, value: "Akuntansi", name: "Akuntansi" },
+                    { id: 3, value: "Manajemen", name: "Manajemen" },
+                ]
+        },
+        {
+            id: 2, value: "Hukum", name: "Hukum",
+            major: [
+                { id: 4, value: "Hukum", name: "Hukum" },
+            ]
+        },
+        {
+            id: 3, value: "Bahasa_dan_Sastra", name: "Bahasa dan Sastra",
+            major: [
+                { id: 5, value: "Bahasa_Inggris", name: "Bahasa Inggris" },
+            ]
+        },
+        {
+            id: 4, value: "Teknologi_Industri", name: "Teknologi Industri",
+            major: [
+                { id: 6, value: "Teknik_Mesin", name: "Teknik Mesin" },
+            ]
+        },
+        {
+            id: 5, value: "Teknik_Elektro_dan_Informatika", name: "Teknik Elektro dan Informatika",
+            major: [
+                { id: 7, value: "Teknik_Elektro", name: "Teknik Elektro" },
+                { id: 8, value: "Teknik_Informatika", name: "Teknik Informatika" },
+                { id: 8, value: "Sistem_Komputer", name: "Sistem Komputer" },
+            ]
+        },
+        {
+            id: 6, value: "Teknik_Sipil_dan_Perencanaan", name: "Teknik Sipil dan Perencanaan",
+            major: [
+                { id: 9, value: "Teknik_Sipil", name: "Teknik Sipil" },
+                { id: 10, value: "Arsitektur", name: "Arsitektur" },
+            ]
+        },
+    ],
+    menu: false,
+    load: false,
+    selected: null
+});
+const Major = reactive({
+    list: [
+        { id: 0, facultyId: 0, value: "Ilmu_Administrasi_Negara", name: "Ilmu Administrasi Negara", faculty: "Ilmu_Sosial_dan_Ilmu_Politik" },
+        { id: 1, facultyId: 0, value: "Komunikasi", name: "Komunikasi", faculty: "Ilmu_Sosial_dan_Ilmu_Politik" },
+        { id: 2, facultyId: 1, value: "Akuntansi", name: "Akuntansi", faculty: "Ekonomi" },
+        { id: 3, facultyId: 1, value: "Manajemen", name: "Manajemen", faculty: "Ekonomi" },
+        { id: 4, facultyId: 2, value: "Hukum", name: "Hukum", faculty: "Hukum" },
+        { id: 5, facultyId: 3, value: "Bahasa_Inggris", name: "Bahasa Inggris", faculty: "Bahasa_dan_Sastra" },
+        { id: 6, facultyId: 4, value: "Teknik_Mesin", name: "Teknik Mesin", faculty: "Teknologi_Industri" },
+        { id: 7, facultyId: 5, value: "Teknik_Elektro", name: "Teknik Elektro", faculty: "Teknik_Elektro_dan_Informatika" },
+        { id: 8, facultyId: 5, value: "Teknik_Informatika", name: "Teknik Informatika", faculty: "Teknik_Elektro_dan_Informatika" },
+        { id: 8, facultyId: 5, value: "Sistem_Komputer", name: "Sistem Komputer", faculty: "Teknik_Elektro_dan_Informatika" },
+        { id: 9, facultyId: 6, value: "Teknik_Sipil", name: "Teknik Sipil", faculty: "Teknik_Sipil_dan_Perencanaan" },
+        { id: 10, facultyId: 6, value: "Arsitektur", name: "Arsitektur", faculty: "Teknik_Sipil_dan_Perencanaan" },
+    ],
+    test: [],
+    menu: false,
+    load: false,
+    selected: null
+});
+const Class = reactive({
+    list: [
+        { id: 0, value: "REGULER_PAGI", name: "Reguler Pagi" },
+        { id: 1, value: "REGULER_MALAM", name: "Reguler Malam" },
+    ],
+    menu: false,
+    load: false,
+    selected: null
+});
+
 
 
 const selectRoleCandidate = (item) => {
@@ -61,6 +148,16 @@ const selectedLevel = (item) => {
 const selectSchedule = (item) => {
     Schedule.selected = item;
     fetchSchedule(item);
+};
+const selectFacultyAndMajor = (item) => {
+    Faculty.selected = item;
+    Major.test = Faculty.selected?.major;
+};
+const selectMajor = (item) => {
+    Major.selected = item;
+};
+const selectClass = (item) => {
+    Class.selected = item;
 };
 
 const fetchSchedule = () => {
@@ -84,7 +181,9 @@ const fetchData = () => {
             RoleCandidate.selected = rawData.candidateRole;
             Schedule.selected = rawData.Election;
             Level.selected = rawData.level;
-            // author.selected = rawData.User;
+            Faculty.selected = rawData.candidateFaculty;
+            Major.selected = rawData.candidateMajor;
+            Class.selected = rawData.candidateClass;
         }).catch((err) => {
             console.log(err);
         });
@@ -125,6 +224,10 @@ const postData = () => {
     formData.loading = true
 };
 
+const classComputed = computed(() => {
+    if (Class.selected) return Class.selected.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ')
+});
+
 onMounted(() => {
     fetchData();
     fetchSchedule();
@@ -147,20 +250,102 @@ onMounted(() => {
                                 v-model="formData.candidateName" type="text" name="nama" id="nama">
                         </div>
                         <div class="flex flex-col space-y-2 text-[18px]">
-                            <label for="visi">Visi</label>
-                            <textarea v-model="formData.candidateVisi"
-                                class="w-[350px] outline outline-1 rounded pl-2 py-1" name="visi" id="visi" cols="30"
-                                rows="10" />
-                            <!-- <input placeholder="Visi" class="w-[350px] remove-arrow outline outline-1 rounded pl-2 py-1"
-                                v-model="formData.candidateVisi" type="text" name="visi" id="visi"> -->
+                            <label for="group">Group</label>
+                            <input placeholder="Group"
+                                class="w-[350px] remove-arrow outline outline-1 rounded pl-2 py-1"
+                                v-model="formData.group" type="text" name="group" id="group">
                         </div>
                         <div class="flex flex-col space-y-2 text-[18px]">
-                            <label for="misi">Misi</label>
-                            <textarea v-model="formData.candidateMisi"
-                                class="w-[350px] outline outline-1 rounded pl-2 py-1" name="misi" id="misi" cols="30"
-                                rows="10" />
-                            <!-- <input placeholder="Misi" class="w-[350px] remove-arrow outline outline-1 rounded pl-2 py-1"
-                                v-model="formData.candidateMisi" type="text" name="misi" id="misi"> -->
+                            <label for="faculty">Fakultas</label>
+                            <SelectComp v-model="Faculty.menu" full>
+                                <div class="py-2 pl-3 pr-2 w-[350px] border rounded-[8px] outline outline-1 cursor-pointer flex items-center bg-white"
+                                    @click="Faculty.menu = !Faculty.menu" role="activator">
+                                    <p class="text-[15px] flex-1 font-medium text-grey1">
+                                        {{ Faculty.selected?.name ?? Faculty.selected ?? "Pilih Fakultas" }}
+                                    </p>
+                                    <mdicon name="chevron-down" :class="`
+                                            transition-all 
+                                            delay-1 ${Faculty.menu ? 'rotate-180' : 'rotate-0'}`" />
+                                </div>
+
+                                <template v-slot:item>
+                                    <div class="max-h-[250px] overflow-y-auto styled-scroll" v-if="Faculty.list.length">
+                                        <div class="hover:bg-gray-100 p-2 font-medium rounded-[8px] text-[15px] text-grey1 cursor-pointer"
+                                            v-for="(item, i) in Faculty.list" :key="`category-${i}`"
+                                            @click="selectFacultyAndMajor(item)">
+                                            {{ item.name }}
+                                        </div>
+                                        <div class="flex justify-center py-1" v-if="Faculty.next && !Faculty.load">
+                                        </div>
+                                    </div>
+                                    <p class="text-sm" v-else>...</p>
+                                    <p v-if="Faculty.load" class="text-xs text-center">
+                                        Sedang memuat data...
+                                    </p>
+                                </template>
+                            </SelectComp>
+                        </div>
+
+                        <div class="flex flex-col space-y-2 text-[18px]">
+                            <label for="major">Jurusan</label>
+                            <SelectComp v-model="Major.menu" full>
+                                <div class="py-2 pl-3 pr-2 w-[350px] border rounded-[8px] outline outline-1 cursor-pointer flex items-center bg-white"
+                                    @click="Major.menu = !Major.menu" role="activator">
+                                    <p class="text-[15px] flex-1 font-medium text-grey1">
+                                        {{ Major.selected?.name ?? Major.selected ?? "Pilih Jurusan" }}
+                                    </p>
+                                    <mdicon name="chevron-down" :class="`
+                                            transition-all 
+                                            delay-1 ${Major.menu ? 'rotate-180' : 'rotate-0'}`" />
+                                </div>
+
+                                <template v-slot:item>
+                                    <div class="max-h-[250px] overflow-y-auto styled-scroll" v-if="Major.list.length">
+                                        <div class="hover:bg-gray-100 p-2 font-medium rounded-[8px] text-[15px] text-grey1 cursor-pointer"
+                                            v-for="(item, i) in Major.test" :key="`category-${i}`"
+                                            @click="selectMajor(item)">
+                                            {{ item.name }}
+                                        </div>
+                                        <div class="flex justify-center py-1" v-if="Major.next && !Major.load">
+                                        </div>
+                                    </div>
+                                    <p class="text-sm" v-else>...</p>
+                                    <p v-if="Major.load" class="text-xs text-center">
+                                        Sedang memuat data...
+                                    </p>
+                                </template>
+                            </SelectComp>
+                        </div>
+
+                        <div class="flex flex-col space-y-2 text-[18px]">
+                            <label for="class">Kelas</label>
+                            <SelectComp v-model="Class.menu" full>
+                                <div class="py-2 pl-3 pr-2 w-[350px] border rounded-[8px] outline outline-1 cursor-pointer flex items-center bg-white"
+                                    @click="Class.menu = !Class.menu" role="activator">
+                                    <p class="text-[15px] flex-1 font-medium text-grey1">
+                                        {{ Class.selected?.name ?? classComputed ?? "Pilih Kelas" }}
+                                    </p>
+                                    <mdicon name="chevron-down" :class="`
+                                            transition-all 
+                                            delay-1 ${Class.menu ? 'rotate-180' : 'rotate-0'}`" />
+                                </div>
+
+                                <template v-slot:item>
+                                    <div class="max-h-[250px] overflow-y-auto styled-scroll" v-if="Class.list.length">
+                                        <div class="hover:bg-gray-100 p-2 font-medium rounded-[8px] text-[15px] text-grey1 cursor-pointer"
+                                            v-for="(item, i) in Class.list" :key="`category-${i}`"
+                                            @click="selectClass(item)">
+                                            {{ item.name }}
+                                        </div>
+                                        <div class="flex justify-center py-1" v-if="Class.next && !Class.load">
+                                        </div>
+                                    </div>
+                                    <p class="text-sm" v-else>...</p>
+                                    <p v-if="Class.load" class="text-xs text-center">
+                                        Sedang memuat data...
+                                    </p>
+                                </template>
+                            </SelectComp>
                         </div>
                         <div class="flex flex-col space-y-2 text-[18px]">
                             <label for="role">Role</label>
@@ -170,8 +355,8 @@ onMounted(() => {
                                     <p class="text-[15px] flex-1 font-medium text-grey1">
                                         {{ RoleCandidate.selected?.name ?? RoleCandidate.selected ?? "Pilih Role" }}
                                     </p>
-                                    <mdicon name="chevron-down" :class="`transition-all delay-1 ${RoleCandidate.menu ? 'rotate-180' : 'rotate-0'
-                }`" />
+                                    <mdicon name="chevron-down"
+                                        :class="`transition-all delay-1 ${RoleCandidate.menu ? 'rotate-180' : 'rotate-0'}`" />
                                 </div>
 
                                 <template v-slot:item>
@@ -193,15 +378,6 @@ onMounted(() => {
                                 </template>
                             </SelectComp>
                         </div>
-
-                    </div>
-                    <div class="space-y-4">
-                        <div class="flex flex-col space-y-2 text-[18px]">
-                            <label for="group">Group</label>
-                            <input placeholder="Group"
-                                class="w-[350px] remove-arrow outline outline-1 rounded pl-2 py-1"
-                                v-model="formData.group" type="text" name="group" id="group">
-                        </div>
                         <div class="flex flex-col space-y-2 text-[18px]">
                             <label for="jadwal">Jadwal</label>
                             <SelectComp v-model="Schedule.menu" full>
@@ -210,8 +386,8 @@ onMounted(() => {
                                     <p class="text-[15px] flex-1 font-medium text-grey1">
                                         {{ Schedule.selected?.electionName ?? "Pilih Jadwal" }}
                                     </p>
-                                    <mdicon name="chevron-down" :class="`transition-all delay-1 ${Schedule.menu ? 'rotate-180' : 'rotate-0'
-                }`" />
+                                    <mdicon name="chevron-down"
+                                        :class="`transition-all delay-1 ${Schedule.menu ? 'rotate-180' : 'rotate-0'}`" />
                                 </div>
 
                                 <template v-slot:item>
@@ -240,8 +416,8 @@ onMounted(() => {
                                     <p class="text-[15px] flex-1 font-medium text-grey1">
                                         {{ Level.selected?.name ?? Level.selected ?? "Pilih Level" }}
                                     </p>
-                                    <mdicon name="chevron-down" :class="`transition-all delay-1 ${Level.menu ? 'rotate-180' : 'rotate-0'
-                }`" />
+                                    <mdicon name="chevron-down"
+                                        :class="`transition-all delay-1 ${Level.menu ? 'rotate-180' : 'rotate-0'}`" />
                                 </div>
 
                                 <template v-slot:item>
@@ -261,10 +437,21 @@ onMounted(() => {
                                 </template>
                             </SelectComp>
                         </div>
-                        <!-- <div class="flex flex-col space-y-2 text-[18px]">
-                            <label for="oleh">Di buat oleh</label>
-                            
-                        </div> -->
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex flex-col space-y-2 text-[18px]">
+                            <label for="visi">Visi</label>
+                            <textarea v-model="formData.candidateVisi"
+                                class="w-[350px] outline outline-1 rounded pl-2 py-1" name="visi" id="visi" cols="30"
+                                rows="10" />
+                        </div>
+                        <div class="flex flex-col space-y-2 text-[18px]">
+                            <label for="misi">Misi</label>
+                            <textarea v-model="formData.candidateMisi"
+                                class="w-[350px] outline outline-1 rounded pl-2 py-1" name="misi" id="misi" cols="30"
+                                rows="10" />
+                        </div>
+
                         <div class="flex flex-col space-y-2 text-[18px]">
                             <label for="uploadCardKandidat">Foto Kandidat</label>
                             <div class="relative inline-block">
