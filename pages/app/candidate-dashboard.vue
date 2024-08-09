@@ -63,7 +63,6 @@ const candidateById = () => {
         .then((res) => {
             dialog.loading = false;
             dialog.data = res.data.data
-            console.log(dialog.data);
         }).catch((err) => {
             errorNotif(err.response.data.message)
         })
@@ -83,6 +82,38 @@ const getCandidates = async () => {
         })
     vm.loading = true;
 };
+
+const classComputed = computed(() => {
+    if (selected._value.candidateClass)
+        return selected._value.candidateClass
+            .split('_')
+            .map(word => word.charAt(0) + word.slice(1).toLowerCase())
+            .join(' ');
+});
+const facultyComputed = computed(() => {
+    if (selected?._value.candidateFaculty)
+        return selected?._value.candidateFaculty
+            .split('_')
+            .map(word => word.charAt(0) + word.slice(1).toLowerCase())
+            .join(' ');
+});
+const majorComputed = computed(() => {
+    if (selected?._value.candidateMajor) return selected?._value.candidateMajor
+        .split('_')
+        .map(word => word.charAt(0) + word.slice(1).toLowerCase())
+        .join(' ');
+});
+
+function getFormattedValue(value) {
+    return computed(() => {
+        return value
+            ? value
+                .split('_')
+                .map(word => word.charAt(0) + word.slice(1).toLowerCase())
+                .join(' ')
+            : '';
+    }).value;
+}
 
 onMounted(() => {
     getCandidates();
@@ -134,7 +165,7 @@ onMounted(() => {
                                     <div class="font-medium text-gray-800">{{ item.candidateName }}</div>
                                 </td>
                                 <td class="p-2 whitespace-nowrap">
-                                    <div class="font-medium text-gray-800">{{ item.group }} / {{ item.candidateRole }}
+                                    <div class="font-medium text-gray-800">{{ item.group }} / {{ getFormattedValue(item.candidateRole) }}
                                     </div>
                                 </td>
                                 <td class="p-2 whitespace-nowrap">
@@ -303,7 +334,7 @@ onMounted(() => {
 
                 </div>
                 <div class="flex items-center">
-                    <div class="flex space-x-2.5">
+                    <div class="flex space-x-2">
                         <div class="grid w-auto">
                             <div class="relative">
                                 <h5 class="text-slate-400">Nama Kandidat</h5>
@@ -341,17 +372,17 @@ onMounted(() => {
                             </div>
                         </div>
                         <div>
-                            <div class="relative">
+                            <div class="relative w-max">
                                 <h5 class="text-slate-400">Fakultas</h5>
-                                <span>{{ selected.candidateFaculty }}</span>
+                                <span>{{ facultyComputed }}</span>
                             </div>
                             <div class="relative">
                                 <h5 class="text-slate-400">Jurusan</h5>
-                                <span>{{ selected.candidateMajor }}</span>
+                                <span>{{ majorComputed }}</span>
                             </div>
-                             <div class="relative">
+                            <div class="relative">
                                 <h5 class="text-slate-400">Kelas</h5>
-                                <span>{{ selected.candidateClass }}</span>
+                                <span>{{ classComputed }}</span>
                             </div>
                         </div>
                     </div>
