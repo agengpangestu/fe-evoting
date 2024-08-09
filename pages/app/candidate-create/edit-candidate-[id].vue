@@ -199,6 +199,9 @@ const postData = () => {
     body.append('candidateAvatar', formData.candidateAvatar);
     body.append('group', formData.group);
     body.append('candidateRole', RoleCandidate.selected?.name || RoleCandidate.selected);
+    body.append('candidateFaculty', Faculty.selected?.value);
+    body.append('candidateMajor', Major.selected?.value);
+    body.append('candidateClass', Class.selected?.value);
     body.append('electionID', Schedule.selected?.electionID);
     body.append('level', Level.selected?.name || Level.selected);
     body.append('createdBy', parseInt(userId));
@@ -213,8 +216,7 @@ const postData = () => {
         }
     )
         .then((result) => {
-            console.log(result);
-            successNotif(result.data.message);
+            successNotif(result.data.message ? 'Berhasil melakukan edit kandidat' : result.data.message);
             formData.loading = false;
         }).catch((err) => {
             console.log(err.response);
