@@ -21,8 +21,6 @@ const formData = reactive({
     candidateMisi: '',
     candidateAvatar: null,
     candidateRole: '',
-    candidateFaculty: '',
-    candidateMajor: '',
     ketua: null,
     wakil_ketua: null,
     group: '',
