@@ -32,8 +32,8 @@ const formData = reactive({
 });
 const RoleCandidate = reactive({
     list: [
-        { name: "KETUA", },
-        { name: "WAKIL_KETUA", }
+        { id: 0, value: "KETUA", name: "Ketua" },
+        { id: 1, value: "WAKIL_KETUA", name: "Wakil Ketua" }
     ],
     menu: false,
     load: false,
@@ -198,10 +198,10 @@ const postData = () => {
     body.append('candidateMisi', formData.candidateMisi);
     body.append('candidateAvatar', formData.candidateAvatar);
     body.append('group', formData.group);
-    body.append('candidateRole', RoleCandidate.selected?.name || RoleCandidate.selected);
-    body.append('candidateFaculty', Faculty.selected?.value);
-    body.append('candidateMajor', Major.selected?.value);
-    body.append('candidateClass', Class.selected?.value);
+    body.append('candidateRole', RoleCandidate.selected?.value || RoleCandidate.selected);
+    body.append('candidateFaculty', Faculty.selected?.value || Faculty.selected);
+    body.append('candidateMajor', Major.selected?.value || Major.selected);
+    body.append('candidateClass', Class.selected?.value || Class.selected);
     body.append('electionID', Schedule.selected?.electionID);
     body.append('level', Level.selected?.name || Level.selected);
     body.append('createdBy', parseInt(userId));
@@ -229,11 +229,14 @@ const postData = () => {
 const classComputed = computed(() => {
     if (Class.selected) return Class.selected.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ');
 });
-const classMajor = computed(() =>   {
+const majorComputed = computed(() => {
     if (Major.selected) return Major.selected.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ');
 });
-const classFaculty = computed(() =>   {
+const facultyComputed = computed(() => {
     if (Faculty.selected) return Faculty.selected.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ');
+});
+const roleComputed = computed(() => {
+    if (RoleCandidate.selected) return RoleCandidate.selected.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ');
 });
 
 onMounted(() => {
@@ -269,7 +272,7 @@ onMounted(() => {
                                 <div class="py-2 pl-3 pr-2 w-[350px] border rounded-[8px] outline outline-1 cursor-pointer flex items-center bg-white"
                                     @click="Faculty.menu = !Faculty.menu" role="activator">
                                     <p class="text-[15px] flex-1 font-medium text-grey1">
-                                        {{ Faculty.selected?.name ?? classFaculty ?? "Pilih Fakultas" }}
+                                        {{ Faculty.selected?.name ?? facultyComputed ?? "Pilih Fakultas" }}
                                     </p>
                                     <mdicon name="chevron-down" :class="`
                                             transition-all 
@@ -300,7 +303,7 @@ onMounted(() => {
                                 <div class="py-2 pl-3 pr-2 w-[350px] border rounded-[8px] outline outline-1 cursor-pointer flex items-center bg-white"
                                     @click="Major.menu = !Major.menu" role="activator">
                                     <p class="text-[15px] flex-1 font-medium text-grey1">
-                                        {{ Major.selected?.name ?? classMajor ?? "Pilih Jurusan" }}
+                                        {{ Major.selected?.name ?? majorComputed ?? "Pilih Jurusan" }}
                                     </p>
                                     <mdicon name="chevron-down" :class="`
                                             transition-all 
@@ -361,7 +364,7 @@ onMounted(() => {
                                 <div class="py-2 pl-3 pr-2 w-[350px] border rounded-[8px] border-gray cursor-pointer flex items-center bg-white"
                                     @click="RoleCandidate.menu = !RoleCandidate.menu" role="activator">
                                     <p class="text-[15px] flex-1 font-medium text-grey1">
-                                        {{ RoleCandidate.selected?.name ?? RoleCandidate.selected ?? "Pilih Role" }}
+                                        {{ RoleCandidate.selected?.name ?? roleComputed ?? "Pilih Role" }}
                                     </p>
                                     <mdicon name="chevron-down"
                                         :class="`transition-all delay-1 ${RoleCandidate.menu ? 'rotate-180' : 'rotate-0'}`" />
