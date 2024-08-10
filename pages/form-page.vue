@@ -2,6 +2,9 @@
 import axios from 'axios';
 import Cookie from 'js-cookie';
 
+import logo from '@/assets/img/logo/logo_unsa.png';
+import InputFileComp from '@/components/InputFileComp.vue';
+
 definePageMeta({
     middleware: ['not-auth-vote']
 });
@@ -57,9 +60,9 @@ const formData = reactive({
 
 const submitForm = () => {
 
-    // if (!formData.identityNumber && !formData.identityNumber) return errorNotif('Nomor Identitas & Nama belum diisi');
-    // if (!formData.identityNumber) return errorNotif('Nomor Identitas belum diisi');
-    // if (!formData.fullName) return errorNotif('Nama belum diisi');
+    if (!formData.identityNumber && !formData.identityNumber) return errorNotif('Nomor Identitas & Nama belum diisi');
+    if (!formData.identityNumber) return errorNotif('Nomor Identitas belum diisi');
+    if (!formData.fullName) return errorNotif('Nama belum diisi');
 
     let body = new FormData();
     body.append('identityNumber', formData.identityNumber);
@@ -106,8 +109,9 @@ onMounted(() => {
 
     <div class="flex items-center justify-center w-full h-screen p-10">
         <div class="w-auto h-auto space-y-5 bg-white">
-            <div>
+            <div class="flex items-center justify-around">
                 <h1 class="text-[22px] [@media(max-width:540px)]:text-[20px]">E-Voting</h1>
+                <img class="w-[80px] [@media(max-width:540px)]:w-[50px]" :src="logo" alt="logo-unsa">
             </div>
             <div class="
                     bg-white 
@@ -138,17 +142,10 @@ onMounted(() => {
                                 v-model="formData.fullName" type="text" name="fullname" id="fullname">
                         </div>
                         <div class="flex flex-col space-y-2 text-[18px] [@media(max-width:540px)]:text-[16px]">
-                            <label for="uploadCard">Upload Kartu Identitas</label>
+                            <label for="uploadCard">Upload Kartu Mahasiswa</label>
                             <div class="relative inline-block">
-                                <input class="
-                                    w-[210px] 
-                                    text-[16px] 
-                                    [@media(max-width:540px)]:text-[14px]
-                                    file:absolute file:right-0 file:bg-blue-500 
-                                    file:text-white file:border-none
-                                    file:py-1 file:px-3 file:rounded-full
-                                    file:shadow-md file:shadow-blue-500/25" type="file" name="uploadCard"
-                                    id="uploadCard" @change="e => formData.identityPicture = e.target.files[0]">
+                                <!-- Data file terkirim duluan, FIX ini ya -->
+                                <InputFileComp v-model:identityPicture="formData.identityPicture" />
                             </div>
                         </div>
 
