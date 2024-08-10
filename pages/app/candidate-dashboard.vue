@@ -140,7 +140,7 @@ onMounted(() => {
                                     <div class="font-semibold text-left">Nama Kandidat</div>
                                 </th>
                                 <th class="p-2 whitespace-nowrap">
-                                    <div class="font-semibold text-left">Group / Jabatan</div>
+                                    <div class="font-semibold text-left">Grup / Jabatan</div>
                                 </th>
                                 <th class="p-2 whitespace-nowrap">
                                     <div class="font-semibold text-left">Tingkat</div>
@@ -336,16 +336,16 @@ onMounted(() => {
                 <div class="flex items-center">
                     <div class="flex space-x-2">
                         <div class="grid w-auto">
-                            <div class="relative">
+                            <div class="relative w-[150px]">
                                 <h5 class="text-slate-400">Nama Kandidat</h5>
                                 <span>{{ selected.candidateName }}</span>
                             </div>
-                            <div class="relative">
+                            <div class="relative w-max">
                                 <h5 class="text-slate-400">Jabatan</h5>
-                                <span>{{ selected.candidateRole }}</span>
+                                <span>{{ getFormattedValue(selected.candidateRole) }}</span>
                             </div>
                             <div class="relative">
-                                <h5 class="text-slate-400">Group</h5>
+                                <h5 class="text-slate-400">Grup</h5>
                                 <span>{{ selected.group }}</span>
                             </div>
                             <div class="relative">
